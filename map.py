@@ -27,7 +27,7 @@ class Map:
         for i in locL:
             if i[0]>=0 and i[0]<=len(self.mapArray[0])-1 and i[1]>=0 and i[1]<=len(self.mapArray)-1:
                 if i[0]!=preX and i[1]!=preY:
-                    if self.mapArray[i[0]][i[1]]=='o':
+                    if self.mapArray[i[1]][i[0]]=='o':
                         return i
                 
         
