@@ -74,7 +74,7 @@ class Model:
         for enemy in self.enemyList:
             if (enemy.moving == True and enemy.death == False):
                 indexPos = self.map.check(enemy.prev_pos[0],enemy.prev_pos[1],enemy.cur_pos[0], enemy.cur_pos[1])
-                if pygame.time.get_ticks() > self.lastUpdated + 2000:
+                if pygame.time.get_ticks() > self.lastUpdated + 500:
                     print pygame.time.get_ticks()
                     if self.map.reach(indexPos[0], indexPos[1]):
                         exit()
