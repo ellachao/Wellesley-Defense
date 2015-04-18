@@ -72,6 +72,8 @@ class Model:
         for enemy in self.enemyList:
             if (enemy.moving == True):
                 indexPos = self.map.check(enemy.prev_pos[0],enemy.prev_pos[1],enemy.cur_pos[0], enemy.cur_pos[1])
+                if self.map.reach(indexPos[0], indexPos[1]):
+                    exit()
                 pixelPos = self.convertingCoordinates(indexPos)
                 enemy.pixel_pos = pixelPos
                 enemy.prev_pos = enemy.cur_pos
