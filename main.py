@@ -1,6 +1,8 @@
-import pygame 
+import pygame
 import constants as c
+import random
 from models import enemy_test
+from map import Map
 from math import sqrt, pow
 
 class View:
@@ -25,10 +27,10 @@ class View:
 
             if (not enemy.death):
                 pygame.draw.circle(self.screen, enemy.color,
-                    enemy.pos, enemy.radius,
+                    enemy.pixel_pos, enemy.radius,
                     enemy.width)
-                pygame.draw.line(self.screen, (255, 0, 0), [enemy.pos[0] - 10, enemy.pos[1] - 15],
-                    [enemy.pos[0] - 10 + enemy.health / 3, enemy.pos[1] - 15], 4)
+                pygame.draw.line(self.screen, (255, 0, 0), [enemy.pixel_pos[0] - 10, enemy.pixel_pos[1] - 15],
+                    [enemy.pixel_pos[0] - 10 + enemy.health / 3, enemy.pixel_pos[1] - 15], 4)
         pygame.display.update()
 
 class Model:
@@ -43,21 +45,39 @@ class Model:
         'green': (0, 255, 0),
         'blue': (0, 0, 255)
         }
-        self.enemyList = [enemy_test(color_list['blue'], [10, 240], [10, 240], 10, 0, False, 10, 50, False),
-                            enemy_test(color_list['red'], [240,15], [15,240], 10, 0, False, 30, 50, False),
-                           enemy_test(color_list['green'], [350,500], [350,500], 10, 0, False, 5, 50, False)]
-        # self.enemy_test = [enemy_test(color_list['blue'], [10, 240], [10, 240], 10, 0, False, 10, 50, False),
-        #                     enemy_test(color_list['red'], [240,10], [10,240], 10, 0, False, 10, 50, False),
+        self.enemyList = []
+        self.map = Map()
+        self.widthRatio = 750/self.map.mapWidth
+        self.heightRatio = 525/self.map.mapHeight
+
+        beginCoord = self.map.start()
+
+        coord = beginCoord[0]
+        self.enemyList.append(enemy_test(color_list['blue'], self.convertingCoordinates(coord), coord, 10, 0, False, 10, 50, False))
+        # for coord in beginCoord:
+        #     self.enemyList.append(enemy_test(color_list['blue'], self.convertingCoordinates(coord), coord, 10, 0, False, 10, 50, False))
+
+        # self.enemyList = [enemy_test(color_list['blue'], beginCoord[0], [10, 240], 10, 0, False, 10, 50, False),
+        #                     enemy_test(color_list['red'], [240,15], [15,240], 10, 0, False, 30, 50, False),
         #                    enemy_test(color_list['green'], [350,500], [350,500], 10, 0, False, 5, 50, False)]
 
-        # self.enemy_test = enemy_test(color_list['blue'], [10, 240], [10, 240], 10, 0, False, 10, 50, False)
-        # self.enemyList.append(self.enemy_test)
-
+    def convertingCoordinates(self, index):
+        xCoord = index[0]* self.widthRatio + self.widthRatio/2
+        yCoord = index[1] * self.heightRatio + self.heightRatio/2
+        mapCoord = (xCoord, yCoord)
+        print str(index) + "==> " + str(mapCoord)
+        return mapCoord
 
     def update(self):
         for enemy in self.enemyList:
             if (enemy.moving == True):
-                enemy.pos[0] = enemy.speed * (pygame.time.get_ticks() / 1000) + enemy.start_pos[0]
+                indexPos = self.map.check(enemy.prev_pos[0],enemy.prev_pos[1],enemy.cur_pos[0], enemy.cur_pos[1])
+                pixelPos = self.convertingCoordinates(indexPos)
+                enemy.pixel_pos = pixelPos
+                enemy.prev_pos = enemy.cur_pos
+                enemy.cur_pos = indexPos
+
+                # enemy.pos[0] = enemy.speed * (pygame.time.get_ticks() / 1000) + enemy.prev_pos[0]
 
             if (enemy.health <= 0):
                 enemy.death = True
@@ -89,7 +109,7 @@ class Controller:
             y = p[1]
             flag = True
             for enemy in self.model.enemyList:
-                if (sqrt(pow((x - enemy.pos[0]), 2) + pow((y - enemy.pos[1]), 2))
+                if (sqrt(pow((x - enemy.pixel_pos[0]), 2) + pow((y - enemy.pixel_pos[1]), 2))
                     <= enemy.radius
                     and flag):
                     enemy.health -= 10
