@@ -1,4 +1,5 @@
 import pygame 
+import constants as c
 from models import enemy_test
 from math import sqrt, pow
 
@@ -100,7 +101,7 @@ def main():
     pygame.init()
 
     # config the screen
-    screen_size = (750, 525)
+    screen_size = (c.SCREEN_WIDTH, c.SCREEN_HEIGHT)
     screen = pygame.display.set_mode(screen_size)
     white = (255, 255, 255)
     screen.fill(white)
