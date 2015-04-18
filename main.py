@@ -49,6 +49,8 @@ class Model:
         self.map = Map()
         self.widthRatio = 750/self.map.mapWidth
         self.heightRatio = 525/self.map.mapHeight
+        self.lastUpdated = pygame.time.get_ticks()
+
 
         beginCoord = self.map.start()
 
@@ -72,12 +74,16 @@ class Model:
         for enemy in self.enemyList:
             if (enemy.moving == True):
                 indexPos = self.map.check(enemy.prev_pos[0],enemy.prev_pos[1],enemy.cur_pos[0], enemy.cur_pos[1])
-                if self.map.reach(indexPos[0], indexPos[1]):
-                    exit()
-                pixelPos = self.convertingCoordinates(indexPos)
-                enemy.pixel_pos = pixelPos
-                enemy.prev_pos = enemy.cur_pos
-                enemy.cur_pos = indexPos
+                if pygame.time.get_ticks() > self.lastUpdated + 2000:
+                    print pygame.time.get_ticks()
+                    if self.map.reach(indexPos[0], indexPos[1]):
+                        exit()
+                    pixelPos = self.convertingCoordinates(indexPos)
+                    enemy.pixel_pos = pixelPos
+                    enemy.prev_pos = enemy.cur_pos
+                    enemy.cur_pos = indexPos
+                    self.lastUpdated = pygame.time.get_ticks()
+
 
                 # enemy.pos[0] = enemy.speed * (pygame.time.get_ticks() / 1000) + enemy.prev_pos[0]
 
