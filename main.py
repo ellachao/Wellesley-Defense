@@ -72,7 +72,7 @@ class Model:
 
     def update(self):
         for enemy in self.enemyList:
-            if (enemy.moving == True):
+            if (enemy.moving == True and enemy.death == False):
                 indexPos = self.map.check(enemy.prev_pos[0],enemy.prev_pos[1],enemy.cur_pos[0], enemy.cur_pos[1])
                 if pygame.time.get_ticks() > self.lastUpdated + 2000:
                     print pygame.time.get_ticks()
