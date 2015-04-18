@@ -47,17 +47,17 @@ class Model:
         }
         self.enemyList = []
         self.map = Map()
-        self.widthRatio = 750/self.map.mapWidth
-        self.heightRatio = 525/self.map.mapHeight
+        self.widthRatio = c.SCREEN_WIDTH/self.map.mapWidth
+        self.heightRatio = c.SCREEN_HEIGHT/self.map.mapHeight
         self.lastUpdated = pygame.time.get_ticks()
 
 
         beginCoord = self.map.start()
 
-        coord = beginCoord[0]
-        self.enemyList.append(enemy_test(color_list['blue'], self.convertingCoordinates(coord), coord, 10, 0, False, 10, 50, False))
-        # for coord in beginCoord:
-        #     self.enemyList.append(enemy_test(color_list['blue'], self.convertingCoordinates(coord), coord, 10, 0, False, 10, 50, False))
+        # coord = beginCoord[0]
+        # self.enemyList.append(enemy_test(color_list['blue'], self.convertingCoordinates(coord), coord, 10, 0, False, 10, 50, False))
+        for coord in beginCoord:
+            self.enemyList.append(enemy_test(color_list['blue'], self.convertingCoordinates(coord), coord, 10, 0, False, 10, 50, False))
 
         # self.enemyList = [enemy_test(color_list['blue'], beginCoord[0], [10, 240], 10, 0, False, 10, 50, False),
         #                     enemy_test(color_list['red'], [240,15], [15,240], 10, 0, False, 30, 50, False),
@@ -71,18 +71,20 @@ class Model:
         return mapCoord
 
     def update(self):
+
+
         for enemy in self.enemyList:
-            if (enemy.moving == True and enemy.death == False):
+            if pygame.time.get_ticks() > self.lastUpdated + 500 and (enemy.moving == True and enemy.death == False):
+
                 indexPos = self.map.check(enemy.prev_pos[0],enemy.prev_pos[1],enemy.cur_pos[0], enemy.cur_pos[1])
-                if pygame.time.get_ticks() > self.lastUpdated + 500:
-                    print pygame.time.get_ticks()
-                    if self.map.reach(indexPos[0], indexPos[1]):
-                        exit()
-                    pixelPos = self.convertingCoordinates(indexPos)
-                    enemy.pixel_pos = pixelPos
-                    enemy.prev_pos = enemy.cur_pos
-                    enemy.cur_pos = indexPos
-                    self.lastUpdated = pygame.time.get_ticks()
+                print pygame.time.get_ticks()
+                if self.map.reach(indexPos[0], indexPos[1]):
+                    exit()
+                pixelPos = self.convertingCoordinates(indexPos)
+                enemy.pixel_pos = pixelPos
+                enemy.prev_pos = enemy.cur_pos
+                enemy.cur_pos = indexPos
+                self.lastUpdated = pygame.time.get_ticks()
 
 
                 # enemy.pos[0] = enemy.speed * (pygame.time.get_ticks() / 1000) + enemy.prev_pos[0]
@@ -154,3 +156,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    # convertingCoordinates((14,0))
