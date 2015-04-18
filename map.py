@@ -13,21 +13,22 @@ class Map:
             self.mapArray.append(list(line.strip()))
     
     def start(self):
-        for i in self.mapArray:
-            if i==0 or i==len(self.mapArray)-1:
-                for j in i:
-                    if j=='o':
-                        return (i,j)
-            else:
-                if i[0]=='o' or i[len(j)-1]=='o':
-                    return (i,j)
+        startPos=[]
+        for i in range(len(self.mapArray)):
+            for j in range(len(self.mapArray[i])):
+                if self.mapArray[i][j]=='o':
+                    if i==0 or i==len(self.mapArray)-1 or j==0 or j==len(self.mapArray[i])-1:
+                        startPos.append((i,j))
+        return startPos
                     
-    #def check(self,preX,preY,curX,curY):
-    #    locL=[(curX-1,curY-1),(curX,curY-1),(curX+1,curY-1),(curX-1,curY),(curX+1,curY),
-    #    (curX-1,curY+1),(curX,curY+1),(curX+1,curY+1)]
-    #    for i in locL:
-    #        if i[0]>=0 and i[0]<=len(self.mapArray)-1 and i[1]
-    #            if i[0]!=preX and i[1]!=preY:
-    #            
+    def check(self,preX,preY,curX,curY):
+        locL=[(curX-1,curY-1),(curX,curY-1),(curX+1,curY-1),(curX-1,curY),(curX+1,curY),
+        (curX-1,curY+1),(curX,curY+1),(curX+1,curY+1)]
+        for i in locL:
+            if i[0]>=0 and i[0]<=len(self.mapArray[0])-1 and i[1]>=0 and i[1]<=len(self.mapArray)-1:
+                if i[0]!=preX and i[1]!=preY:
+                    if self.mapArray[i[0]][i[1]]=='o':
+                        return i
+                
         
             
