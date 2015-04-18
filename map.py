@@ -28,11 +28,15 @@ class Map:
     def check(self,preX,preY,curX,curY):
         locL=[(curX-1,curY-1),(curX,curY-1),(curX+1,curY-1),(curX-1,curY),(curX+1,curY),
         (curX-1,curY+1),(curX,curY+1),(curX+1,curY+1)]
+        number=-1
+        place=None
         for i in locL:
             if i[0]>=0 and i[0]<=len(self.mapArray[0])-1 and i[1]>=0 and i[1]<=len(self.mapArray)-1:
-                if i[0]!=preX and i[1]!=preY:
-                    if self.mapArray[i[1]][i[0]]=='o' or self.mapArray[i[1]][i[0]]=='p':
-                        return i
+                if i[0]!=preX or i[1]!=preY:
+                    if self.mapArray[i[1]][i[0]]>=number:
+                        number=self.mapArray[i[1]][i[0]]
+                        place=i
+        return place
                 
     def reach(self,curX,curY):
         for i in range(len(self.mapArray)):
