@@ -1,5 +1,5 @@
 class enemy_test:
-	def __init__(self, color, pos, start_pos, radius, width, moving, speed, health):
+	def __init__(self, color, pos, start_pos, radius, width, moving, speed, health, death):
 		self.color = color
 		self.pos = pos
 		self.start_pos = start_pos
@@ -7,4 +7,5 @@ class enemy_test:
 		self.width = width
 		self.speed = speed
 		self.health = health
+		self.death = death
 	 
