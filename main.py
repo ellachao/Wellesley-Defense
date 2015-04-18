@@ -78,7 +78,7 @@ def main():
     pygame.init()
 
     # config the screen
-    screen_size = (723, 483)
+    screen_size = (750, 525)
     screen = pygame.display.set_mode(screen_size)
     white = (255, 255, 255)
     screen.fill(white)
