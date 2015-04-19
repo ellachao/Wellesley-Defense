@@ -38,65 +38,45 @@ class Model:
     Create a model for our bubble pop game
     """
     def __init__(self):
-        color_list = {
-        'white': (255, 255, 255),
-        'black': (0, 0, 0),
-        'red': (255, 0, 0),
-        'green': (0, 255, 0),
-        'blue': (0, 0, 255)
-        }
+        color_list = {'black': (0, 0, 0),'red': (255, 0, 0),
+                      'green': (0, 255, 0),'blue': (0, 0, 255)}
+        colorList = color_list.keys()
         self.enemyList = []
         self.map = Map()
         self.widthRatio = c.SCREEN_WIDTH/self.map.mapWidth
         self.heightRatio = c.SCREEN_HEIGHT/self.map.mapHeight
         self.lastUpdated = pygame.time.get_ticks()
 
-
         beginCoord = self.map.start()
-
-        # coord = beginCoord[0]
-        # self.enemyList.append(enemy_test(color_list['blue'], self.convertingCoordinates(coord), coord, 10, 0, False, 10, 50, False))
         for coord in beginCoord:
-            self.enemyList.append(enemy_test(color_list['blue'], self.convertingCoordinates(coord), coord, 10, 0, False, 10, 50, False))
-
-        # self.enemyList = [enemy_test(color_list['blue'], beginCoord[0], [10, 240], 10, 0, False, 10, 50, False),
-        #                     enemy_test(color_list['red'], [240,15], [15,240], 10, 0, False, 30, 50, False),
-        #                    enemy_test(color_list['green'], [350,500], [350,500], 10, 0, False, 5, 50, False)]
+            self.enemyList.append(enemy_test(color_list[colorList[random.randint(0,len(colorList)-1)]],
+                                             self.convertingCoordinates(coord), coord, 10, 0, False,
+                                             random.randint(1,2)*10, 50, False))
 
     def convertingCoordinates(self, index):
         xCoord = index[0]* self.widthRatio + self.widthRatio/2
         yCoord = index[1] * self.heightRatio + self.heightRatio/2
         mapCoord = (xCoord, yCoord)
-        print str(index) + "==> " + str(mapCoord)
+        # print str(index) + "==> " + str(mapCoord)
         return mapCoord
 
     def update(self):
+        if pygame.time.get_ticks() > self.lastUpdated + 500:
+            for enemy in self.enemyList:
+                if (enemy.moving == True and enemy.death == False):
 
+                    indexPos = self.map.check(enemy.prev_pos[0],enemy.prev_pos[1],enemy.cur_pos[0], enemy.cur_pos[1])
+                    # print pygame.time.get_ticks()
+                    if self.map.reach(indexPos[0], indexPos[1]):
+                        exit()
+                    pixelPos = self.convertingCoordinates(indexPos)
+                    enemy.pixel_pos = pixelPos
+                    enemy.prev_pos = enemy.cur_pos
+                    enemy.cur_pos = indexPos
+                    self.lastUpdated = pygame.time.get_ticks()
 
-        for enemy in self.enemyList:
-            if pygame.time.get_ticks() > self.lastUpdated + 500 and (enemy.moving == True and enemy.death == False):
-
-                indexPos = self.map.check(enemy.prev_pos[0],enemy.prev_pos[1],enemy.cur_pos[0], enemy.cur_pos[1])
-                print pygame.time.get_ticks()
-                if self.map.reach(indexPos[0], indexPos[1]):
-                    exit()
-                pixelPos = self.convertingCoordinates(indexPos)
-                enemy.pixel_pos = pixelPos
-                enemy.prev_pos = enemy.cur_pos
-                enemy.cur_pos = indexPos
-                self.lastUpdated = pygame.time.get_ticks()
-
-
-                # enemy.pos[0] = enemy.speed * (pygame.time.get_ticks() / 1000) + enemy.prev_pos[0]
-
-            if (enemy.health <= 0):
-                enemy.death = True
-
-        # if (self.enemy_test.moving == True):
-        #     self.enemy_test.pos[0] = self.enemy_test.speed * (pygame.time.get_ticks() / 1000) + self.enemy_test.start_pos[0]
-        #
-        # if (self.enemy_test.health <= 0):
-        #     self.enemy_test.death = True
+                if (enemy.health <= 0):
+                    enemy.death = True
 
 
 class Controller:
@@ -123,7 +103,7 @@ class Controller:
                     <= enemy.radius
                     and flag):
                     enemy.health -= 10
-                    print enemy.health
+                    # print enemy.health
                     flag = False
 
 def main():
@@ -156,4 +136,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    # convertingCoordinates((14,0))

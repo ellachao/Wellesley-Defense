@@ -6,9 +6,9 @@ class Map:
         self.mapArray=[]
         self.read()
         self.mapWidth = len(self.mapArray[0])
-        print self.mapWidth
+        # print self.mapWidth
         self.mapHeight = len(self.mapArray)
-        print self.mapHeight
+        # print self.mapHeight
         
     def read(self):
         charmap=open('map.txt','r')
